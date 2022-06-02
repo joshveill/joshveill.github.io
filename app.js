@@ -1,27 +1,31 @@
-// Initiation of the game, total of 5 games
-function game() {
-  let playerScore = 0;
-  let computerScore = 0;
+// Initiation of the game, first to 5
 
-  for (let i = 0; i < 5; i++) {
-    // New selection for the player and computer for every loop done
-    const computerSelection = computerPlay();
-    //Player is prompted to enter a value for every game (loop done)
-    const playerSelection = window.prompt("Enter your choice").toLowerCase();
-    // Score tracking and logging of who won which match invidually
-    let game = playRound(playerSelection, computerSelection);
-    if (game.includes("You win")) {
-      playerScore += 1;
-      console.log("Player's point");
-    } else if (game.includes("lose")) {
-      computerScore += 1;
-      console.log("Computer's point");
-    } else {
-      console.log("tie");
-    }
+let playerScore = 0;
+let computerScore = 0;
+
+function game(selection) {
+  // New selection for the player and computer for every round
+  const computerSelection = computerPlay();
+  //Player is prompted to choose a selection
+  const playerSelection = selection;
+  // Score tracking and logging of who won which match invidually
+  let game = playRound(playerSelection, computerSelection);
+  if (game.includes("You win")) {
+    playerScore += 1;
+    roundInfo.innerText = "Player's point";
+  } else if (game.includes("lose")) {
+    computerScore += 1;
+    roundInfo.innerText = "Computer's point";
+  } else {
+    roundInfo.innerText = "tie";
   }
+  score.innerText = `${playerScore} to ${computerScore}`;
 
-  console.log(`Player has ${playerScore}, computer has ${computerScore}`);
+  if (isGameOver() && playerScore < computerScore) {
+    roundInfo.innerText = "Game Over, Computer wins!";
+  } else if (isGameOver() && playerScore > computerScore) {
+    roundInfo.innerText = "Game Over, Player wins!";
+  }
 }
 // This function is called in the "game" function to inititate a random choice of rock, paper, scissors everytime
 function computerPlay() {
@@ -65,4 +69,25 @@ function playRound(pS, cS) {
   } else if (pS == "scissors" && cS == "rock") {
     return "You lose! Rock beats scissors";
   }
+}
+
+const rockBtn = document.getElementById("rock");
+const paperBtn = document.getElementById("paper");
+const scissorsBtn = document.getElementById("scissors");
+const score = document.getElementById("score");
+
+rockBtn.addEventListener("click", (event) => {
+  game("rock");
+});
+
+paperBtn.addEventListener("click", (event) => {
+  game("paper");
+});
+
+scissorsBtn.addEventListener("click", (event) => {
+  game("scissors");
+});
+
+function isGameOver() {
+  return playerScore == 5 || computerScore == 5;
 }
